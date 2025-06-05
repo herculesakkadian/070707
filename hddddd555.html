@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi Iframe Launcher</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: sans-serif;
+      color: white;
+      background-color: black;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .dashboard {
+      background: rgba(0, 0, 0, 0.7);
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .dashboard h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      width: 48%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      box-sizing: border-box;
+    }
+    .open-btn {
+      background-color: #28a745;
+    }
+    .clear-btn {
+      background-color: #dc3545;
+    }
+    .iframe-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+      justify-items: center;
+    }
+    iframe {
+      border: 2px solid #0f0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .info {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+
+  <div class="dashboard">
+    <h1>Iframe Launcher Dashboard</h1>
+
+    <label>عدد النوافذ:</label>
+    <input type="number" id="windowCount" value="2" min="1">
+
+    <label>الرابط:</label>
+    <input type="text" id="windowUrl" value="https://example.com">
+
+    <label>العرض (بكسل):</label>
+    <input type="number" id="windowWidth" value="300" min="100">
+
+    <label>الارتفاع (بكسل):</label>
+    <input type="number" id="windowHeight" value="200" min="100">
+
+    <div style="display: flex; justify-content: space-between;">
+      <button class="open-btn" onclick="launchIframes()">فتح النوافذ</button>
+      <button class="clear-btn" onclick="clearIframes()">إزالة الكل</button>
+    </div>
+
+    <div class="iframe-container" id="iframeContainer"></div>
+
+    <div class="info">
+      <h3>عنّي</h3>
+      <p>أنا <strong>lmzbab-7amid</strong>، كنخدم على مشاريع تجريبية وواجهات تفاعلية، وكنحب الإبداع فهاد المجال.</p>
+    </div>
+
+    <div class="info">
+      <h3>طريقة التواصل</h3>
+      <p>أي استفسار أو تعاون، مرحبا بك تتواصل معايا عبر الإيميل: <strong>lmzbab7amid@gmail.com</strong></p>
+    </div>
+  </div>
+
+  <script>
+    function launchIframes() {
+      const count = parseInt(document.getElementById('windowCount').value);
+      const url = document.getElementById('windowUrl').value;
+      const width = parseInt(document.getElementById('windowWidth').value);
+      const height = parseInt(document.getElementById('windowHeight').value);
+      const container = document.getElementById('iframeContainer');
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.width = width + 'px';
+        iframe.style.height = height + 'px';
+        container.appendChild(iframe);
+      }
+    }
+
+    function clearIframes() {
+      document.getElementById('iframeContainer').innerHTML = '';
+    }
+
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = '01ABCDEFGHIJKLMNOPQRSTUVXYZ!@#$%^&*';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 50);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
